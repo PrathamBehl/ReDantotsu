@@ -112,20 +112,24 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         binding.mediaViewPager.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = navBarHeight
         }
-        val oldMargin = binding.mediaViewPager.marginBottom
-        AndroidBug5497Workaround.assistActivity(this) {
-            if (it) {
+               val oldMargin = binding.mediaViewPager.marginBottom
+        AndroidBug5497Workaround.assistActivity(this) { isKeyboardVisible ->
+            if (isKeyboardVisible) {
                 binding.mediaViewPager.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = 0
+                    rightMargin = 0
                 }
                 navBar.visibility = View.GONE
             } else {
+                val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
                 binding.mediaViewPager.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = oldMargin
+                    bottomMargin = if (isLandscape) 0 else oldMargin
+                    rightMargin = if (isLandscape) navBarHeight else 0
                 }
                 navBar.visibility = View.VISIBLE
             }
         }
+ 
         val navBarRightMargin = if (resources.configuration.orientation ==
             Configuration.ORIENTATION_LANDSCAPE
         ) navBarHeight else 0
