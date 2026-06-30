@@ -418,18 +418,26 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
+        override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        val rightMargin = if (resources.configuration.orientation ==
-            Configuration.ORIENTATION_LANDSCAPE
-        ) navBarHeight else 0
-        val bottomMargin = if (resources.configuration.orientation ==
-            Configuration.ORIENTATION_LANDSCAPE
-        ) 0 else navBarHeight
-        val params: ViewGroup.MarginLayoutParams =
-            navBar.layoutParams as ViewGroup.MarginLayoutParams
-        params.updateMargins(right = rightMargin, bottom = bottomMargin)
+        val isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+        
+        val navBarRightMargin = if (isLandscape) navBarHeight else 0
+        val navBarBottomMargin = if (isLandscape) 0 else navBarHeight
+        
+        val params: ViewGroup.MarginLayoutParams = navBar.layoutParams as ViewGroup.MarginLayoutParams
+        params.updateMargins(right = navBarRightMargin, bottom = navBarBottomMargin)
+
+        // Dynamically adjust content window bounds on live rotation
+        binding.mediaViewPager.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = if (isLandscape) 0 else navBarHeight
+            rightMargin = if (isLandscape) navBarHeight else 0
+        }
+        
+        // Recalculate screen dimensions for animations
+        screenWidth = resources.displayMetrics.widthPixels.toFloat()
     }
+
 
     override fun onResume() {
         if (::navBar.isInitialized)
