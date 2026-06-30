@@ -496,13 +496,17 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         binding.mediaCover.visibility =
             if (binding.mediaCover.scaleX == 0f) View.GONE else View.VISIBLE
         val duration = (200 * (PrefManager.getVal(PrefName.AnimationSpeed) as Float)).toLong()
-        if (percentage >= percent && !isCollapsed) {
+               if (percentage >= percent && !isCollapsed) {
             isCollapsed = true
+            
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            val targetX = if (isLandscape) 0f else screenWidth
+            
             ObjectAnimator.ofFloat(binding.mediaTitle, "translationX", 0f).setDuration(duration)
                 .start()
-            ObjectAnimator.ofFloat(binding.mediaAccessContainer, "translationX", screenWidth)
+            ObjectAnimator.ofFloat(binding.mediaAccessContainer, "translationX", targetX)
                 .setDuration(duration).start()
-            ObjectAnimator.ofFloat(binding.mediaCover, "translationX", screenWidth)
+            ObjectAnimator.ofFloat(binding.mediaCover, "translationX", targetX)
                 .setDuration(duration).start()
             ObjectAnimator.ofFloat(binding.mediaCollapseContainer, "translationX", screenWidth)
                 .setDuration(duration).start()
