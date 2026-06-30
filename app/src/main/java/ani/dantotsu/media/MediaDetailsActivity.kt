@@ -112,7 +112,7 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         binding.mediaViewPager.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = navBarHeight
         }
-               val oldMargin = binding.mediaViewPager.marginBottom
+        val oldMargin = binding.mediaViewPager.marginBottom
         AndroidBug5497Workaround.assistActivity(this) { isKeyboardVisible ->
             if (isKeyboardVisible) {
                 binding.mediaViewPager.updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -129,7 +129,7 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
                 navBar.visibility = View.VISIBLE
             }
         }
- 
+
         val navBarRightMargin = if (resources.configuration.orientation ==
             Configuration.ORIENTATION_LANDSCAPE
         ) navBarHeight else 0
@@ -418,13 +418,13 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         }
     }
 
-        override fun onConfigurationChanged(newConfig: Configuration) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         val isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
-        
+
         val navBarRightMargin = if (isLandscape) navBarHeight else 0
         val navBarBottomMargin = if (isLandscape) 0 else navBarHeight
-        
+
         val params: ViewGroup.MarginLayoutParams = navBar.layoutParams as ViewGroup.MarginLayoutParams
         params.updateMargins(right = navBarRightMargin, bottom = navBarBottomMargin)
 
@@ -433,11 +433,10 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
             bottomMargin = if (isLandscape) 0 else navBarHeight
             rightMargin = if (isLandscape) navBarHeight else 0
         }
-        
+
         // Recalculate screen dimensions for animations
         screenWidth = resources.displayMetrics.widthPixels.toFloat()
     }
-
 
     override fun onResume() {
         if (::navBar.isInitialized)
@@ -496,12 +495,13 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         binding.mediaCover.visibility =
             if (binding.mediaCover.scaleX == 0f) View.GONE else View.VISIBLE
         val duration = (200 * (PrefManager.getVal(PrefName.AnimationSpeed) as Float)).toLong()
-               if (percentage >= percent && !isCollapsed) {
+        
+        if (percentage >= percent && !isCollapsed) {
             isCollapsed = true
-            
+
             val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
             val targetX = if (isLandscape) 0f else screenWidth
-            
+
             ObjectAnimator.ofFloat(binding.mediaTitle, "translationX", 0f).setDuration(duration)
                 .start()
             ObjectAnimator.ofFloat(binding.mediaAccessContainer, "translationX", targetX)
@@ -607,4 +607,3 @@ class MediaDetailsActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         var mediaSingleton: Media? = null
     }
 }
-
